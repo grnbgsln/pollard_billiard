@@ -6,58 +6,175 @@
   <title>Sistem Libur Rolling</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
-      background: #f7f8fa;
-      color: #222;
-      padding: 20px;
+      font-family: "Poppins", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #eef2ff 0%, #fefefe 100%);
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
+      margin: 30px 0 10px;
+      color: #1e40af;
+      font-size: 1.8rem;
     }
 
+    p.subtitle {
+      text-align: center;
+      color: #475569;
+      margin-bottom: 30px;
+      font-size: 1rem;
+    }
+
+    .highlight {
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    /* ✨ Container */
     .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
+      padding: 0 20px;
     }
 
-    .shift, .rules, .days {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      padding: 16px 20px;
-    }
-
+    /* 💼 Shift Card */
     .shift {
-      width: 220px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 18px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      padding: 24px;
+      width: 260px;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shift::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 5px;
+      width: 100%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+    }
+
+    .shift:nth-child(2)::before {
+      background: linear-gradient(90deg, #16a34a, #4ade80);
+    }
+
+    .shift:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
     }
 
     .shift h3 {
-      margin-top: 0;
+      color: #1e3a8a;
+      margin-top: 8px;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .shift ol {
+      margin: 0;
+      padding-left: 22px;
+      font-size: 0.95rem;
+      color: #334155;
+    }
+
+    .shift ol li {
+      padding: 3px 0;
+      transition: color 0.2s;
+    }
+
+    .shift ol li:hover {
       color: #2563eb;
+    }
+
+    /* 🧾 Rules */
+    .rules {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      padding: 22px;
+      max-width: 460px;
+      transition: all 0.25s ease;
+    }
+
+    .rules:hover {
+      transform: translateY(-4px);
+    }
+
+    .rules h3 {
+      color: #1e40af;
+      margin-top: 0;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 5px;
+    }
+
+    .rules h4 {
+      margin-top: 12px;
+      color: #2563eb;
+      font-size: 1rem;
+    }
+
+    .rules p, .rules li {
+      font-size: 0.93rem;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    .rules ul {
+      padding-left: 18px;
+    }
+
+    .rules p:last-child {
+      font-style: italic;
+      color: #475569;
+    }
+
+    /* 📅 Jadwal Mingguan */
+    h2 {
+      text-align: center;
+      margin-top: 50px;
+      color: #1e40af;
     }
 
     .days {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
+      gap: 16px;
       width: 100%;
-      max-width: 900px;
+      max-width: 950px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
     }
 
     .day {
-      border-radius: 10px;
-      padding: 10px;
-      color: #333;
+      border-radius: 12px;
+      padding: 15px;
+      color: #1e293b;
       text-align: center;
       font-weight: 500;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.25s;
+    }
+
+    .day:hover {
+      transform: scale(1.03);
     }
 
     .day h4 {
-      margin: 4px 0;
+      margin: 5px 0 8px;
+      font-size: 1rem;
     }
 
     .Senin { background: #ffe2e2; }
@@ -68,64 +185,77 @@
     .Sabtu { background: #ece7e1; }
     .Minggu { background: #e2f0ff; }
 
-    .rules {
-      max-width: 400px;
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 1.5rem; }
+      .shift, .rules { width: 100%; max-width: 400px; }
+      .days { grid-template-columns: 1fr 1fr; }
     }
 
-    .rules ul {
-      padding-left: 18px;
+    @media (max-width: 480px) {
+      .days { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <h1>📅 Jadwal Libur Rolling</h1>
+  <h1>📅 Sistem Libur Rolling</h1>
+  <p class="subtitle">
+    Pembagian libur adil dan bergilir setiap minggu<br>
+    <span id="date-info" class="highlight"></span>
+  </p>
 
   <div class="container">
     <div class="shift">
-      <h3>SHIFT 1</h3>
+      <h3>SHIFT 1 - PAGI</h3>
       <ol>
-        <li>Riyan ✅</li>
-        <li>Jaya ✅</li>
-        <li>Susma ✅</li>
-        <li>Nada ✅</li>
-        <li>Lilik ✅</li>
-        <li>Fitri ✅</li>
-        <li>Mila ✅</li>
+        <li>Riyan</li>
+        <li>Jaya</li>
+        <li>Susma</li>
+        <li>Nada</li>
+        <li>Lilik</li>
+        <li>Fitri</li>
+        <li>Mila</li>
       </ol>
     </div>
 
     <div class="shift">
-      <h3>SHIFT 2</h3>
+      <h3>SHIFT 2 - MALAM</h3>
       <ol>
-        <li>Bram ✅</li>
-        <li>Ozat ✅</li>
-        <li>Faisal ✅</li>
-        <li>Nanda ✅</li>
-        <li>Upik ✅</li>
-        <li>Afifa ✅</li>
-        <li>Fadli ✅</li>
+        <li>Bram</li>
+        <li>Ozat</li>
+        <li>Faisal</li>
+        <li>Nanda</li>
+        <li>Upik</li>
+        <li>Afifa</li>
+        <li>Fadli</li>
       </ol>
     </div>
 
     <div class="rules">
-      <h3>Aturan Singkat</h3>
+      <h3>📝 Aturan Libur Bulanan</h3>
+      <p><b>Ketentuan umum:</b> 1 bulan = 4 minggu, dan setiap orang mendapat <b>4 hari libur per bulan</b>.</p>
+
+      <h4>1. Libur karena acara atau izin</h4>
+      <p>Boleh diambil selama masih ada sisa jatah libur bulan ini.</p>
+
+      <h4>2. Jika jatah libur sudah habis</h4>
       <ul>
-        <li>Setiap orang libur <b>4x sebulan</b> (1x per minggu)</li>
-        <li>Kalau jatah libur habis, bisa ambil:
-          <ul>
-            <li>Jatah bulan depan (maks. 4 hari), atau</li>
-            <li>Potong gaji harian</li>
-          </ul>
-        </li>
-        <li>Jadwal libur berpindah tiap minggu (rolling otomatis)</li>
+        <li><b>A. Ambil jatah bulan depan</b> – maksimal 4 hari. Bulan depan tidak dapat jatah baru.</li>
+        <li><b>B. Potong gaji harian</b> – maksimal 4 hari. Contoh: gaji Rp1.200.000 → Rp40.000/hari.</li>
       </ul>
+
+      <h4>3. Jadwal libur bergilir tiap minggu</h4>
+      <p>Contoh: minggu ini libur <b>Senin</b>, minggu depan <b>Selasa</b>, lalu <b>Rabu</b>, dan seterusnya.</p>
+
+      <p>🌀 <i>Hari libur kamu berganti tiap minggu, biar semua kebagian.</i></p>
     </div>
   </div>
 
-  <h2 style="text-align:center; margin-top:40px;">Jadwal Libur Minggu Ini</h2>
+  <h2>📆 Jadwal Libur Minggu Ini</h2>
   <div class="days" id="days"></div>
 
   <script>
+    // ✅ Menentukan jadwal dasar
     const baseSchedule = {
       "Senin": ["Riyan", "Afifa"],
       "Selasa": ["Nada", "Bram"],
@@ -143,10 +273,21 @@
       return Math.ceil((date.getDate() + firstDay.getDay()) / 7);
     }
 
+    // ✅ Hitung minggu keberapa & tanggal
     const today = new Date();
     const currentWeek = getWeekOfMonth(today);
-    const shiftBy = (currentWeek - 1) % 7; // pindah 1 hari per minggu
+    const shiftBy = (currentWeek - 1) % 7;
 
+    const months = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    const formattedDate = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+
+    document.getElementById("date-info").innerText =
+      `Minggu ke-${currentWeek} bulan ${months[today.getMonth()]} (${formattedDate})`;
+
+    // ✅ Buat rotasi rolling mingguan
     const rotated = {};
     daysOrder.forEach((day, idx) => {
       const newIndex = (idx + shiftBy) % 7;
@@ -157,10 +298,7 @@
     daysOrder.forEach(day => {
       const div = document.createElement("div");
       div.className = `day ${day}`;
-      div.innerHTML = `
-        <h4>${day}</h4>
-        <p>${rotated[day].join("<br>")}</p>
-      `;
+      div.innerHTML = `<h4>${day}</h4><p>${rotated[day].join("<br>")}</p>`;
       daysDiv.appendChild(div);
     });
   </script>
