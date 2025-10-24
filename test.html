@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Libur Rolling</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f7f8fa;
+      color: #222;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .shift, .rules, .days {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      padding: 16px 20px;
+    }
+
+    .shift {
+      width: 220px;
+    }
+
+    .shift h3 {
+      margin-top: 0;
+      color: #2563eb;
+    }
+
+    .days {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .day {
+      border-radius: 10px;
+      padding: 10px;
+      color: #333;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .day h4 {
+      margin: 4px 0;
+    }
+
+    .Senin { background: #ffe2e2; }
+    .Selasa { background: #d9f7d9; }
+    .Rabu { background: #e3e8ff; }
+    .Kamis { background: #fff7cc; }
+    .Jumat { background: #f0e6ff; }
+    .Sabtu { background: #ece7e1; }
+    .Minggu { background: #e2f0ff; }
+
+    .rules {
+      max-width: 400px;
+    }
+
+    .rules ul {
+      padding-left: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📅 Jadwal Libur Rolling</h1>
+
+  <div class="container">
+    <div class="shift">
+      <h3>SHIFT 1</h3>
+      <ol>
+        <li>Riyan ✅</li>
+        <li>Jaya ✅</li>
+        <li>Susma ✅</li>
+        <li>Nada ✅</li>
+        <li>Lilik ✅</li>
+        <li>Fitri ✅</li>
+        <li>Mila ✅</li>
+      </ol>
+    </div>
+
+    <div class="shift">
+      <h3>SHIFT 2</h3>
+      <ol>
+        <li>Bram ✅</li>
+        <li>Ozat ✅</li>
+        <li>Faisal ✅</li>
+        <li>Nanda ✅</li>
+        <li>Upik ✅</li>
+        <li>Afifa ✅</li>
+        <li>Fadli ✅</li>
+      </ol>
+    </div>
+
+    <div class="rules">
+      <h3>Aturan Singkat</h3>
+      <ul>
+        <li>Setiap orang libur <b>4x sebulan</b> (1x per minggu)</li>
+        <li>Kalau jatah libur habis, bisa ambil:
+          <ul>
+            <li>Jatah bulan depan (maks. 4 hari), atau</li>
+            <li>Potong gaji harian</li>
+          </ul>
+        </li>
+        <li>Jadwal libur berpindah tiap minggu (rolling otomatis)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="text-align:center; margin-top:40px;">Jadwal Libur Minggu Ini</h2>
+  <div class="days" id="days"></div>
+
+  <script>
+    const baseSchedule = {
+      "Senin": ["Riyan", "Afifa"],
+      "Selasa": ["Nada", "Bram"],
+      "Rabu": ["Jaya", "Upik"],
+      "Kamis": ["Susma", "Faisal"],
+      "Jumat": ["Lilik", "Fadli"],
+      "Sabtu": ["Mila", "Ozat"],
+      "Minggu": ["Fitri", "Nanda"],
+    };
+
+    const daysOrder = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+
+    function getWeekOfMonth(date) {
+      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      return Math.ceil((date.getDate() + firstDay.getDay()) / 7);
+    }
+
+    const today = new Date();
+    const currentWeek = getWeekOfMonth(today);
+    const shiftBy = (currentWeek - 1) % 7; // pindah 1 hari per minggu
+
+    const rotated = {};
+    daysOrder.forEach((day, idx) => {
+      const newIndex = (idx + shiftBy) % 7;
+      rotated[daysOrder[newIndex]] = baseSchedule[day];
+    });
+
+    const daysDiv = document.getElementById("days");
+    daysOrder.forEach(day => {
+      const div = document.createElement("div");
+      div.className = `day ${day}`;
+      div.innerHTML = `
+        <h4>${day}</h4>
+        <p>${rotated[day].join("<br>")}</p>
+      `;
+      daysDiv.appendChild(div);
+    });
+  </script>
+</body>
+</html>
