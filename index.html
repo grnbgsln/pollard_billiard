@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistem Libur Rolling</title>
+  <title>Sistem Libur & Shift Rolling</title>
   <style>
     body {
       font-family: "Poppins", "Segoe UI", sans-serif;
@@ -15,7 +15,7 @@
 
     h1 {
       text-align: center;
-      margin: 30px 0 10px;
+      margin: 20px 0 10px;
       color: #1e40af;
       font-size: 1.8rem;
     }
@@ -23,7 +23,7 @@
     p.subtitle {
       text-align: center;
       color: #475569;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       font-size: 1rem;
     }
 
@@ -32,7 +32,43 @@
       font-weight: 600;
     }
 
-    /* ✨ Container */
+    .nav-link {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #2563eb;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+      margin-bottom: 20px;
+    }
+
+    .nav-link:hover {
+      background: #1e40af;
+      transform: translateY(-2px);
+    }
+
+    .controls {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    input[type="date"] {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #1e293b;
+      background-color: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="date"]:focus {
+      border-color: #2563eb;
+      outline: none;
+    }
+
     .container {
       display: flex;
       flex-wrap: wrap;
@@ -41,7 +77,6 @@
       padding: 0 20px;
     }
 
-    /* 💼 Shift Card */
     .shift {
       background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
       border-radius: 18px;
@@ -99,49 +134,6 @@
       color: #2563eb;
     }
 
-    /* 🧾 Rules */
-    .rules {
-      background: #ffffff;
-      border-radius: 18px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      padding: 22px;
-      max-width: 460px;
-      transition: all 0.25s ease;
-    }
-
-    .rules:hover {
-      transform: translateY(-4px);
-    }
-
-    .rules h3 {
-      color: #1e40af;
-      margin-top: 0;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 5px;
-    }
-
-    .rules h4 {
-      margin-top: 12px;
-      color: #2563eb;
-      font-size: 1rem;
-    }
-
-    .rules p, .rules li {
-      font-size: 0.93rem;
-      line-height: 1.6;
-      color: #334155;
-    }
-
-    .rules ul {
-      padding-left: 18px;
-    }
-
-    .rules p:last-child {
-      font-style: italic;
-      color: #475569;
-    }
-
-    /* 📅 Jadwal Mingguan */
     h2 {
       text-align: center;
       margin-top: 50px;
@@ -172,11 +164,6 @@
       transform: scale(1.03);
     }
 
-    .day h4 {
-      margin: 5px 0 8px;
-      font-size: 1rem;
-    }
-
     .Senin { background: #ffe2e2; }
     .Selasa { background: #d9f7d9; }
     .Rabu { background: #e3e8ff; }
@@ -184,122 +171,142 @@
     .Jumat { background: #f0e6ff; }
     .Sabtu { background: #ece7e1; }
     .Minggu { background: #e2f0ff; }
-
-    /* 📱 Responsive */
-    @media (max-width: 768px) {
-      h1 { font-size: 1.5rem; }
-      .shift, .rules { width: 100%; max-width: 400px; }
-      .days { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (max-width: 480px) {
-      .days { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
-  <h1>📅 Sistem Libur Rolling</h1>
+  <!-- Tombol Form Izin -->
+  <div style="text-align:center;">
+    <a href="izin.html" class="nav-link">📝 Form Izin / Libur</a>
+  </div>
+
+  <h1>📅 Sistem Libur & Shift Rolling</h1>
   <p class="subtitle">
-    Pembagian libur adil dan bergilir setiap minggu<br>
+    Pilih tanggal untuk simulasi shift & libur (otomatis berubah saat tanggal diganti)<br />
     <span id="date-info" class="highlight"></span>
   </p>
 
-  <div class="container">
-    <div class="shift">
-      <h3>SHIFT 1 - PAGI</h3>
-      <ol>
-        <li>Riyan</li>
-        <li>Jaya</li>
-        <li>Susma</li>
-        <li>Nada</li>
-        <li>Lilik</li>
-        <li>Fitri</li>
-        <li>Mila</li>
-      </ol>
-    </div>
-
-    <div class="shift">
-      <h3>SHIFT 2 - MALAM</h3>
-      <ol>
-        <li>Bram</li>
-        <li>Ozat</li>
-        <li>Faisal</li>
-        <li>Nanda</li>
-        <li>Upik</li>
-        <li>Afifa</li>
-        <li>Fadli</li>
-      </ol>
-    </div>
-
-    <div class="rules">
-      <h3>📝 Aturan Libur Bulanan</h3>
-      <p><b>Ketentuan umum:</b> 1 bulan = 4 minggu, dan setiap orang mendapat <b>4 hari libur per bulan</b>.</p>
-
-      <h4>1. Libur karena acara atau izin</h4>
-      <p>Boleh diambil selama masih ada sisa jatah libur bulan ini.</p>
-
-      <h4>2. Jika jatah libur sudah habis</h4>
-      <ul>
-        <li><b>A. Ambil jatah bulan depan</b> – maksimal 4 hari. Bulan depan tidak dapat jatah baru.</li>
-        <li><b>B. Potong gaji harian</b> – maksimal 4 hari. Contoh: gaji Rp1.200.000 → Rp40.000/hari.</li>
-      </ul>
-
-      <h4>3. Jadwal libur bergilir tiap minggu</h4>
-      <p>Contoh: minggu ini libur <b>Senin</b>, minggu depan <b>Selasa</b>, lalu <b>Rabu</b>, dan seterusnya.</p>
-
-      <p>🌀 <i>Hari libur kamu berganti tiap minggu, biar semua kebagian.</i></p>
-    </div>
+  <div class="controls">
+    <input type="date" id="datePicker" />
   </div>
+
+  <div class="container" id="shift-container"></div>
 
   <h2>📆 Jadwal Libur Minggu Ini</h2>
   <div class="days" id="days"></div>
 
   <script>
-    // ✅ Menentukan jadwal dasar
+    const shift1 = ["Ozat", "Jaya", "Susma", "Nada", "Lilik", "Fitri", "Mila"];
+    const shift2 = ["Bram", "Riyan", "Faisal", "Nanda", "Upik", "Afifa", "Fadli"];
+    const allEmployees = [...shift1, ...shift2];
+
     const baseSchedule = {
-      "Senin": ["Riyan", "Afifa"],
+      "Senin": ["Ozat", "Afifa"],
       "Selasa": ["Nada", "Bram"],
       "Rabu": ["Jaya", "Upik"],
       "Kamis": ["Susma", "Faisal"],
       "Jumat": ["Lilik", "Fadli"],
-      "Sabtu": ["Mila", "Ozat"],
+      "Sabtu": ["Mila", "Riyan"],
       "Minggu": ["Fitri", "Nanda"],
     };
 
-    const daysOrder = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+    const baseDays = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
+    const daysOrder = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-    function getWeekOfMonth(date) {
-      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-      return Math.ceil((date.getDate() + firstDay.getDay()) / 7);
+    function firstMondayOfYear(year) {
+      const d = new Date(year,0,1);
+      const day = d.getDay();
+      const offset = (8 - day) % 7;
+      d.setDate(d.getDate() + offset);
+      d.setHours(0,0,0,0);
+      return d;
     }
 
-    // ✅ Hitung minggu keberapa & tanggal
-    const today = new Date();
-    const currentWeek = getWeekOfMonth(today);
-    const shiftBy = (currentWeek - 1) % 7;
+    function weeksSinceStart(refDate, date) {
+      const diff = Math.floor((date - refDate)/MS_PER_DAY);
+      return Math.floor(diff/7);
+    }
 
-    const months = [
-      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-    const formattedDate = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+    function daysSinceStart(refDate, date) {
+      return Math.floor((date - refDate)/MS_PER_DAY);
+    }
 
-    document.getElementById("date-info").innerText =
-      `Minggu ke-${currentWeek} bulan ${months[today.getMonth()]} (${formattedDate})`;
+    function dateFromInput(value) {
+      if(!value) return new Date();
+      return new Date(value+'T00:00:00');
+    }
 
-    // ✅ Buat rotasi rolling mingguan
-    const rotated = {};
-    daysOrder.forEach((day, idx) => {
-      const newIndex = (idx + shiftBy) % 7;
-      rotated[daysOrder[newIndex]] = baseSchedule[day];
-    });
+    function render(date){
+      const today = new Date(date.getFullYear(),date.getMonth(),date.getDate());
+      const startRef = firstMondayOfYear(today.getFullYear());
+      if(today < startRef){
+        const prevStart = firstMondayOfYear(today.getFullYear()-1);
+        if(today >= prevStart) startRef.setTime(prevStart.getTime());
+      }
 
-    const daysDiv = document.getElementById("days");
-    daysOrder.forEach(day => {
-      const div = document.createElement("div");
-      div.className = `day ${day}`;
-      div.innerHTML = `<h4>${day}</h4><p>${rotated[day].join("<br>")}</p>`;
-      daysDiv.appendChild(div);
+      const dayCount = daysSinceStart(startRef,today);
+      const weekCount = weeksSinceStart(startRef,today);
+      const isSwapped = Math.floor(dayCount/3) % 2 === 1;
+      const currentShift1 = isSwapped ? shift2 : shift1;
+      const currentShift2 = isSwapped ? shift1 : shift2;
+      const shiftBy = ((weekCount % 7)+7)%7;
+
+      const rotated = {};
+      baseDays.forEach((day, idx)=>{
+        const newIndex = (idx+shiftBy)%7;
+        const targetDay = baseDays[newIndex];
+        rotated[targetDay] = baseSchedule[day] ? [...baseSchedule[day]] : [];
+      });
+
+      const displayWeekNumber = weekCount + 1;
+      const formattedDate = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+      document.getElementById("date-info").innerText =
+        `Minggu ke-${displayWeekNumber} (patokan Senin pertama tahun), tanggal ${formattedDate}`;
+
+      const shiftContainer = document.getElementById("shift-container");
+      const daysDiv = document.getElementById("days");
+      shiftContainer.innerHTML = "";
+      daysDiv.innerHTML = "";
+
+      const todayName = daysOrder[today.getDay()];
+
+      if(todayName === "Jumat"){
+        const fridayOff = rotated["Jumat"] || [];
+        const workingPeople = allEmployees.filter(p=>!fridayOff.includes(p));
+        const div = document.createElement("div");
+        div.className = "shift";
+        div.innerHTML = `<h3>SHIFT KHUSUS JUMAT</h3><ol>${workingPeople.map(m=>`<li>${m}</li>`).join("")}</ol>`;
+        shiftContainer.appendChild(div);
+      } else {
+        const shifts = [
+          {name:"SHIFT 1 - PAGI", members: currentShift1},
+          {name:"SHIFT 2 - MALAM", members: currentShift2}
+        ];
+        shifts.forEach(s=>{
+          const div = document.createElement("div");
+          div.className = "shift";
+          div.innerHTML = `<h3>${s.name}</h3><ol>${s.members.map(m=>`<li>${m}</li>`).join("")}</ol>`;
+          shiftContainer.appendChild(div);
+        });
+      }
+
+      baseDays.forEach(day=>{
+        const list = rotated[day] || [];
+        const div = document.createElement("div");
+        div.className = `day ${day}`;
+        div.innerHTML = `<h4>${day}</h4><p>${list.join("<br>")}</p>`;
+        daysDiv.appendChild(div);
+      });
+    }
+
+    const datePicker = document.getElementById("datePicker");
+    const initDate = new Date();
+    datePicker.valueAsDate = initDate;
+    render(new Date(initDate.getFullYear(),initDate.getMonth(),initDate.getDate()));
+    datePicker.addEventListener("input", e=>{
+      const chosen = dateFromInput(e.target.value);
+      render(chosen);
     });
   </script>
 </body>

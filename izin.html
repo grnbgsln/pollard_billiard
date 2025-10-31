@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Form Izin / Libur</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #f3f4f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #1e293b;
+    }
+
+    .container {
+      background: #fff;
+      max-width: 450px;
+      width: 100%;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2563eb;
+      margin-bottom: 24px;
+      font-size: 1.8rem;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      background: #1e40af;
+      transform: translateY(-2px);
+    }
+
+    #status {
+      text-align: center;
+      font-weight: 600;
+      margin-top: 12px;
+      min-height: 24px;
+      transition: all 0.3s;
+    }
+
+    iframe#hidden_iframe { display:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📝 Form Izin / Libur</h2>
+
+    <form id="leaveForm" 
+      action="https://script.google.com/macros/s/AKfycbyBJtumvsaD8JqGHpFckpkV3qRN1I1cdPJzhGPawakt3E-CN1TskHdwqbQzbhTyJ45Y/exec"
+      method="post" target="hidden_iframe">
+      
+      <select name="nama" id="nama" required>
+        <option value="" disabled selected>Pilih Nama</option>
+      </select>
+
+      <input type="date" name="tanggal" id="tanggal" required />
+
+      <select name="tipe" id="tipe" required>
+        <option value="" disabled selected>Pilih Tipe</option>
+        <option value="Sakit">Sakit</option>
+        <option value="Izin">Izin</option>
+      </select>
+
+      <textarea name="alasan" id="alasan" rows="3" placeholder="Alasan izin/libur..." required></textarea>
+      <button type="submit">Kirim</button>
+    </form>
+
+    <p id="status"></p>
+  </div>
+
+  <iframe id="hidden_iframe" name="hidden_iframe"></iframe>
+
+  <script>
+    const semuaNama = ["Ozat", "Jaya", "Susma", "Nada", "Lilik", "Fitri", "Mila", "Bram", "Riyan", "Faisal", "Nanda", "Upik", "Afifa", "Fadli"];
+    const selectNama = document.getElementById('nama');
+
+    semuaNama.forEach(n => {
+      const option = document.createElement('option');
+      option.value = n;
+      option.textContent = n;
+      selectNama.appendChild(option);
+    });
+
+    const tanggalInput = document.getElementById('tanggal');
+    const today = new Date().toISOString().split('T')[0];
+    tanggalInput.value = today;
+
+    const form = document.getElementById('leaveForm');
+    const statusEl = document.getElementById('status');
+    const tipeSelect = document.getElementById('tipe');
+
+    form.addEventListener('submit', function () {
+      statusEl.style.color = '#2563eb';
+      statusEl.textContent = 'Mengirim...';
+
+      setTimeout(() => {
+        statusEl.style.color = tipeSelect.value === 'Sakit' ? '#dc2626' : '#2563eb';
+        statusEl.textContent = '✅ Izin/libur berhasil dikirim! (cek Google Sheet)';
+        form.reset();
+        tanggalInput.value = today;
+      }, 800);
+    });
+  </script>
+</body>
+</html>
