@@ -3,82 +3,123 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Form Izin / Libur</title>
+  <title>Form Izin Sederhana</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    /* FONT & BODY STYLES - Sangat Minimal */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #dbeafe, #f3f4f6);
+      font-family: 'Inter', sans-serif;
+      background: #f7f7f7; /* Latar belakang datar dan terang */
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       margin: 0;
-      color: #1e293b;
+      color: #333;
     }
 
+    /* CONTAINER CARD - Sangat Flat */
     .container {
       background: #fff;
-      max-width: 450px;
+      max-width: 400px; /* Ukuran lebih kecil */
       width: 100%;
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
+      padding: 30px;
+      border-radius: 8px; /* Sudut lebih kecil */
+      border: 1px solid #ddd; /* Border tipis */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Bayangan sangat halus */
+    }
+    
+    /* CARD HEADER */
+    .header {
+        text-align: center;
+        margin-bottom: 25px;
     }
 
-    .container:hover {
-      transform: translateY(-5px);
+    .header h2 {
+      color: #3b82f6; /* Warna biru standar */
+      margin-bottom: 5px;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .header p {
+        color: #666;
+        font-size: 0.9rem;
+        margin: 0;
     }
 
-    h2 {
-      text-align: center;
-      color: #2563eb;
-      margin-bottom: 24px;
-      font-size: 1.8rem;
+    /* FORM INPUTS */
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: 600;
+        color: #444;
+        font-size: 0.9rem;
     }
 
     select, input, textarea {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      font-size: 1rem;
-      transition: all 0.2s;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+      background-color: #fff; /* Latar belakang input putih */
+      transition: border-color 0.2s;
     }
 
     select:focus, input:focus, textarea:focus {
       outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+      border-color: #3b82f6; /* Fokus border biru simpel */
+      box-shadow: 0 0 0 1px #3b82f6; /* Hilangkan box-shadow tebal */
     }
-
+    
+    /* SUBMIT BUTTON - Hanya menggunakan warna solid */
     button {
       width: 100%;
       padding: 12px;
-      border-radius: 10px;
+      border-radius: 6px;
       border: none;
-      background: #2563eb;
+      background: #3b82f6;
       color: #fff;
       font-weight: 600;
       font-size: 1rem;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: background 0.2s;
     }
 
     button:hover {
-      background: #1e40af;
-      transform: translateY(-2px);
+      background: #1d4ed8;
+      transform: none; /* Hilangkan transisi hover yang berlebihan */
+      box-shadow: none;
+    }
+    
+    button:disabled {
+        background: #999;
+        cursor: not-allowed;
     }
 
+    /* STATUS MESSAGE - Simpel dan Lurus */
     #status {
       text-align: center;
       font-weight: 600;
-      margin-top: 12px;
-      min-height: 24px;
-      transition: all 0.3s;
+      margin-top: 15px;
+      padding: 10px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+    }
+    
+    .status-success {
+        color: #16a34a; /* Hijau tua */
+        background-color: #dcfce7;
+    }
+    .status-sending {
+        color: #3b82f6;
+        background-color: #eef2ff;
     }
 
     iframe#hidden_iframe { display:none; }
@@ -86,37 +127,60 @@
 </head>
 <body>
   <div class="container">
-    <h2>📝 Form Izin / Libur</h2>
+    <div class="header">
+        <h2>📝 Form Izin Karyawan</h2>
+        <p>Isi data untuk mengirim pengajuan libur atau izin.</p>
+    </div>
 
     <form id="leaveForm" 
       action="https://script.google.com/macros/s/AKfycbyBJtumvsaD8JqGHpFckpkV3qRN1I1cdPJzhGPawakt3E-CN1TskHdwqbQzbhTyJ45Y/exec"
       method="post" target="hidden_iframe">
       
-      <select name="nama" id="nama" required>
-        <option value="" disabled selected>Pilih Nama</option>
-      </select>
+      <div class="form-group">
+        <label for="nama">Nama Karyawan</label>
+        <select name="nama" id="nama" required>
+          <option value="" disabled selected>Pilih Nama Anda</option>
+        </select>
+      </div>
 
-      <input type="date" name="tanggal" id="tanggal" required />
+      <div class="form-group">
+        <label for="tanggal">Tanggal Izin/Libur</label>
+        <input type="date" name="tanggal" id="tanggal" required />
+      </div>
 
-      <select name="tipe" id="tipe" required>
-        <option value="" disabled selected>Pilih Tipe</option>
-        <option value="Sakit">Sakit</option>
-        <option value="Izin">Izin</option>
-      </select>
+      <div class="form-group">
+        <label for="tipe">Tipe Pengajuan</label>
+        <select name="tipe" id="tipe" required>
+          <option value="" disabled selected>Pilih Tipe</option>
+          <option value="Sakit">Sakit</option>
+          <option value="Izin">Izin (Pribadi)</option>
+        </select>
+      </div>
 
-      <textarea name="alasan" id="alasan" rows="3" placeholder="Alasan izin/libur..." required></textarea>
-      <button type="submit">Kirim</button>
+      <div class="form-group">
+        <label for="alasan">Alasan</label>
+        <textarea name="alasan" id="alasan" rows="3" placeholder="Tulis alasan singkat..." required></textarea>
+      </div>
+      
+      <button type="submit" id="submitBtn">Kirim Pengajuan</button>
     </form>
 
     <p id="status"></p>
   </div>
 
-  <iframe id="hidden_iframe" name="hidden_iframe"></iframe>
+  <iframe id="hidden_iframe" name="hidden_iframe" onload="formSubmitted()"></iframe>
 
   <script>
+    // Data Karyawan (Sama seperti halaman Shift)
     const semuaNama = ["Ozat", "Jaya", "Susma", "Nada", "Lilik", "Fitri", "Mila", "Bram", "Riyan", "Faisal", "Nanda", "Upik", "Afifa", "Fadli"];
+    
     const selectNama = document.getElementById('nama');
-
+    const tanggalInput = document.getElementById('tanggal');
+    const form = document.getElementById('leaveForm');
+    const statusEl = document.getElementById('status');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // 1. ISI NAMA OTOMATIS
     semuaNama.forEach(n => {
       const option = document.createElement('option');
       option.value = n;
@@ -124,25 +188,33 @@
       selectNama.appendChild(option);
     });
 
-    const tanggalInput = document.getElementById('tanggal');
+    // 2. SET TANGGAL HARI INI
     const today = new Date().toISOString().split('T')[0];
     tanggalInput.value = today;
 
-    const form = document.getElementById('leaveForm');
-    const statusEl = document.getElementById('status');
-    const tipeSelect = document.getElementById('tipe');
-
-    form.addEventListener('submit', function () {
-      statusEl.style.color = '#2563eb';
+    // 3. LOGIKA SUBMIT
+    form.addEventListener('submit', function (e) {
+      statusEl.className = 'status-sending';
       statusEl.textContent = 'Mengirim...';
-
-      setTimeout(() => {
-        statusEl.style.color = tipeSelect.value === 'Sakit' ? '#dc2626' : '#2563eb';
-        statusEl.textContent = '✅ Izin/libur berhasil dikirim! (cek Google Sheet)';
-        form.reset();
-        tanggalInput.value = today;
-      }, 800);
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Mengirim...';
     });
+
+    function formSubmitted() {
+        if (submitBtn.disabled) {
+            statusEl.className = 'status-success';
+            statusEl.textContent = '✅ Pengajuan berhasil dikirim!';
+            
+            // Reset form dan tombol
+            setTimeout(() => {
+                form.reset();
+                tanggalInput.value = today;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Kirim Pengajuan';
+                statusEl.textContent = ''; // Kosongkan setelah beberapa saat
+            }, 1000);
+        }
+    }
   </script>
 </body>
 </html>

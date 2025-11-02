@@ -3,28 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistem Libur & Shift Rolling</title>
+  <title>Minimalist Team & Holiday Scheduler</title>
   <style>
+    /* Global & Typography */
     body {
-      font-family: "Poppins", "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #eef2ff 0%, #fefefe 100%);
-      color: #1e293b;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #f7f9fc;
+      color: #334155;
       margin: 0;
       padding: 0;
+      line-height: 1.6;
+    }
+
+    .container-wrapper {
+      max-width: 1100px; /* Lebar lebih besar untuk layout 2 kolom */
+      margin: 40px auto;
+      padding: 0 20px;
     }
 
     h1 {
       text-align: center;
-      margin: 20px 0 10px;
       color: #1e40af;
-      font-size: 1.8rem;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e40af;
+      font-size: 1.5rem;
+      margin: 40px 0 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
     }
 
     p.subtitle {
       text-align: center;
-      color: #475569;
-      margin-bottom: 20px;
-      font-size: 1rem;
+      color: #64748b;
+      margin-bottom: 25px;
+      font-size: 0.95rem;
     }
 
     .highlight {
@@ -32,169 +50,239 @@
       font-weight: 600;
     }
 
-    .nav-link {
-      display: inline-block;
-      padding: 10px 20px;
-      background: #2563eb;
-      color: #fff;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.2s;
-      margin-bottom: 20px;
-    }
-
-    .nav-link:hover {
-      background: #1e40af;
-      transform: translateY(-2px);
-    }
-
+    /* Controls & Links */
     .controls {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      align-items: center;
     }
 
     input[type="date"] {
-      padding: 8px 12px;
+      padding: 10px 15px;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
       font-size: 1rem;
-      color: #1e293b;
-      background-color: #fff;
-      transition: border-color 0.2s;
+      color: #334155;
+      background-color: #ffffff;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
     }
 
     input[type="date"]:focus {
       border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
       outline: none;
     }
 
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 0 20px;
+    .nav-link {
+      padding: 8px 18px;
+      background: #dc2626;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: background 0.2s, transform 0.2s;
     }
 
+    .nav-link:hover {
+      background: #b91c1c;
+      transform: translateY(-1px);
+    }
+
+    /* --- LAYOUT BERDAMPINGAN UTAMA --- */
+    .main-content-flex {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        align-items: flex-start; /* Konten dimulai dari atas */
+        margin-top: 20px;
+        flex-wrap: wrap; /* Pastikan responsif pada layar kecil */
+    }
+    
+    /* Container Shift */
+    #shift-container {
+        display: flex;
+        gap: 25px;
+        justify-content: center;
+        flex: 1; /* Ambil sisa ruang */
+        min-width: 580px; /* Minimum lebar untuk dua kartu shift */
+    }
+
+    /* Rotation Info Table (Minimalis) */
+    #rotation-info {
+        flex: 0 0 350px; /* Lebar tetap 350px untuk tabel rotasi */
+        order: 2; /* Taruh di samping (kanan) */
+    }
+    .rotation-minimal-container {
+        text-align: center;
+        padding: 15px 20px;
+        background-color: #ffffff; 
+        border-radius: 12px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05); 
+    }
+    .rotation-minimal-container h3 {
+        color: #1e40af;
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-bottom: 1px solid #e2e8f0; 
+        padding-bottom: 10px;
+    }
+
+    .rotation-minimal-table {
+        width: 100%;
+        border-collapse: collapse; 
+        font-size: 0.95rem;
+    }
+    .rotation-minimal-table th, .rotation-minimal-table td {
+        padding: 8px 5px;
+        text-align: center;
+        border: none; 
+    }
+    .rotation-minimal-table th {
+        background-color: #f1f5f9; 
+        color: #475569;
+        font-weight: 600;
+        border-bottom: 2px solid #cbd5e1; 
+    }
+    .rotation-minimal-table tbody tr {
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .rotation-minimal-table tbody tr:last-child {
+        border-bottom: none;
+    }
+    .tim-pagi { font-weight: 700; color: #10b981; }
+    .tim-malam { font-weight: 700; color: #f97316; }
+    .tim-khusus { background-color: #f7f9fc; color: #2563eb; font-weight: 600; }
+
+    /* Team Cards */
     .shift {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-      border-radius: 18px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      padding: 24px;
-      width: 260px;
-      transition: all 0.25s ease;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+      width: 280px;
       position: relative;
-      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      transition: transform 0.2s;
     }
-
-    .shift::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 5px;
-      width: 100%;
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
-    }
-
-    .shift:nth-child(2)::before {
-      background: linear-gradient(90deg, #16a34a, #4ade80);
-    }
-
-    .shift:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
-    }
+    
+    .shift:hover { transform: translateY(-3px); }
 
     .shift h3 {
-      color: #1e3a8a;
-      margin-top: 8px;
-      margin-bottom: 15px;
       font-size: 1.2rem;
       text-align: center;
-      letter-spacing: 0.5px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-weight: 600;
+      padding-bottom: 5px;
+      border-bottom: 2px solid;
     }
+    
+    .shift-pagi h3 { color: #1e40af; border-color: #93c5fd; }
+    .shift-malam h3 { color: #b45309; border-color: #fed7aa; }
+    
+    .shift ol { margin: 0; padding: 0; list-style-type: none; font-size: 0.95rem; }
+    .shift ol li { padding: 5px 0; border-bottom: 1px dotted #e5e7eb; }
+    .shift ol li:last-child { border-bottom: none; }
 
-    .shift ol {
-      margin: 0;
-      padding-left: 22px;
-      font-size: 0.95rem;
-      color: #334155;
-    }
-
-    .shift ol li {
-      padding: 3px 0;
-      transition: color 0.2s;
-    }
-
-    .shift ol li:hover {
-      color: #2563eb;
-    }
-
-    h2 {
-      text-align: center;
-      margin-top: 50px;
-      color: #1e40af;
-    }
-
+    /* Holiday Schedule */
     .days {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 16px;
-      width: 100%;
-      max-width: 950px;
-      margin: 0 auto 60px;
-      padding: 0 20px;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 40px;
     }
 
     .day {
-      border-radius: 12px;
-      padding: 15px;
-      color: #1e293b;
+      border-radius: 10px;
+      padding: 15px 10px;
+      color: #334155;
       text-align: center;
       font-weight: 500;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-      transition: all 0.25s;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0,0,0,0.05);
     }
 
-    .day:hover {
-      transform: scale(1.03);
-    }
+    .day h4 { margin: 0 0 5px 0; font-size: 1rem; font-weight: 600; }
+    .day p { margin: 0; font-size: 0.85rem; color: #475569; }
 
-    .Senin { background: #ffe2e2; }
-    .Selasa { background: #d9f7d9; }
-    .Rabu { background: #e3e8ff; }
-    .Kamis { background: #fff7cc; }
-    .Jumat { background: #f0e6ff; }
-    .Sabtu { background: #ece7e1; }
-    .Minggu { background: #e2f0ff; }
+    /* Soft Day Colors */
+    .Senin { background: #fff1f2; border-color: #fca5a5;}
+    .Selasa { background: #f0fdf4; border-color: #a7f3d0;}
+    .Rabu { background: #eff6ff; border-color: #93c5fd;}
+    .Kamis { background: #fffbeb; border-color: #fcd34d;}
+    .Jumat { background: #f5f3ff; border-color: #c4b5fd;}
+    .Sabtu { background: #fafafa; border-color: #d1d5db;}
+    .Minggu { background: #f0f9ff; border-color: #7dd3fc;}
   </style>
 </head>
 <body>
-  <!-- Tombol Form Izin -->
-  <div style="text-align:center;">
-    <a href="izin.html" class="nav-link">📝 Form Izin / Libur</a>
+  <div class="container-wrapper">
+    <h1>🗓️ Jadwal Tim Karyawan</h1>
+    <p class="subtitle">
+      Rotasi tim 7 hari dan jadwal libur.<br>
+      <span style="color: red;">Ini berlaku di tanggal 3 November 2025 dan seterusnya. </span>
+    
+    </p>
+
+    <div class="controls">
+      <a href="izin.html" class="nav-link">📝 Ajukan Izin / Cuti</a>
+      <input type="date" id="datePicker" />
+    </div>
+
+    <p class="subtitle">
+        Tanggal saat ini: <span id="date-info" class="highlight"></span>
+    </p>
+
+    <div class="main-content-flex">
+        
+        <div class="shift-cards-container" id="shift-container">
+            </div>
+
+        <div id="rotation-info" class="rotation-minimal-container">
+            <h3>🔄 Aturan Rotasi Tim Mingguan</h3>
+            <table class="rotation-minimal-table">
+                <thead>
+                    <tr>
+                        <th>Periode</th>
+                        <th>Tim 1</th>
+                        <th>Tim 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Senin - Rabu (3 Hari)</td>
+                        <td class="tim-pagi">Pagi</td>
+                        <td class="tim-malam">Malam</td>
+                    </tr>
+                    <tr>
+                        <td>Kamis, Sabtu, Minggu (3 Hari)</td>
+                        <td class="tim-malam">Malam</td>
+                        <td class="tim-pagi">Pagi</td>
+                    </tr>
+                    <tr>
+                        <td>Jumat</td>
+                        <td colspan="2" class="tim-khusus">✅ Semua Masuk (Kecuali Libur Harian)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+    <hr>
+
+    <h2>Pegawai Libur Mingguan</h2>
+    <div class="days" id="days"></div>
   </div>
 
-  <h1>📅 Sistem Libur & Shift Rolling</h1>
-  <p class="subtitle">
-    Pilih tanggal untuk simulasi shift & libur (otomatis berubah saat tanggal diganti)<br />
-    <span id="date-info" class="highlight"></span>
-  </p>
-
-  <div class="controls">
-    <input type="date" id="datePicker" />
-  </div>
-
-  <div class="container" id="shift-container"></div>
-
-  <h2>📆 Jadwal Libur Minggu Ini</h2>
-  <div class="days" id="days"></div>
-
-  <script>
+<script>
+    // --- Data Karyawan dan Jadwal Dasar ---
     const shift1 = ["Ozat", "Jaya", "Susma", "Nada", "Lilik", "Fitri", "Mila"];
     const shift2 = ["Bram", "Riyan", "Faisal", "Nanda", "Upik", "Afifa", "Fadli"];
     const allEmployees = [...shift1, ...shift2];
@@ -209,11 +297,13 @@
       "Minggu": ["Fitri", "Nanda"],
     };
 
+    // --- Konstanta Waktu ---
     const baseDays = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
     const daysOrder = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
     const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
     const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
+    // --- Fungsi Bantuan Waktu ---
     function firstMondayOfYear(year) {
       const d = new Date(year,0,1);
       const day = d.getDay();
@@ -237,6 +327,7 @@
       return new Date(value+'T00:00:00');
     }
 
+    // --- Fungsi Utama Render ---
     function render(date){
       const today = new Date(date.getFullYear(),date.getMonth(),date.getDate());
       const startRef = firstMondayOfYear(today.getFullYear());
@@ -247,9 +338,15 @@
 
       const dayCount = daysSinceStart(startRef,today);
       const weekCount = weeksSinceStart(startRef,today);
-      const isSwapped = Math.floor(dayCount/3) % 2 === 1;
-      const currentShift1 = isSwapped ? shift2 : shift1;
-      const currentShift2 = isSwapped ? shift1 : shift2;
+      
+      const dayInCycle = dayCount % 7;
+      
+      // LOGIKA ROTASI TIM: Bertukar pada hari Kamis (dayInCycle >= 3)
+      const isShiftSwapped = dayInCycle >= 3; 
+      
+      const membersShift1 = shift1; 
+      const membersShift2 = shift2;
+      
       const shiftBy = ((weekCount % 7)+7)%7;
 
       const rotated = {};
@@ -259,10 +356,11 @@
         rotated[targetDay] = baseSchedule[day] ? [...baseSchedule[day]] : [];
       });
 
+      // --- Tampilan Informasi Tanggal ---
       const displayWeekNumber = weekCount + 1;
       const formattedDate = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
       document.getElementById("date-info").innerText =
-        `Minggu ke-${displayWeekNumber} (patokan Senin pertama tahun), tanggal ${formattedDate}`;
+        `${formattedDate} (Minggu ke-${displayWeekNumber})`;
 
       const shiftContainer = document.getElementById("shift-container");
       const daysDiv = document.getElementById("days");
@@ -270,36 +368,59 @@
       daysDiv.innerHTML = "";
 
       const todayName = daysOrder[today.getDay()];
+      
+      // --- Penentuan Tim Berdasarkan Rotasi Mingguan ---
+      let membersShiftPagi;
+      let membersShiftMalam;
+      let nameShiftPagi;
+      let nameShiftMalam;
+      let classShiftPagi = "shift shift-pagi";
+      let classShiftMalam = "shift shift-malam";
 
+      if (isShiftSwapped) {
+        membersShiftPagi = membersShift2; 
+        membersShiftMalam = membersShift1; 
+        nameShiftPagi = "TIM 2 (PAGI)";
+        nameShiftMalam = "TIM 1 (MALAM)";
+      } else {
+        membersShiftPagi = membersShift1;
+        membersShiftMalam = membersShift2;
+        nameShiftPagi = "TIM 1 (PAGI)";
+        nameShiftMalam = "TIM 2 (MALAM)";
+      }
+
+      // --- Rendering Tim ---
       if(todayName === "Jumat"){
         const fridayOff = rotated["Jumat"] || [];
         const workingPeople = allEmployees.filter(p=>!fridayOff.includes(p));
         const div = document.createElement("div");
-        div.className = "shift";
-        div.innerHTML = `<h3>SHIFT KHUSUS JUMAT</h3><ol>${workingPeople.map(m=>`<li>${m}</li>`).join("")}</ol>`;
+        div.className = "shift shift-pagi"; 
+        div.innerHTML = `<h3>TIM KHUSUS JUMAT</h3><ol>${workingPeople.map(m=>`<li>${m}</li>`).join("")}</ol>`;
         shiftContainer.appendChild(div);
       } else {
         const shifts = [
-          {name:"SHIFT 1 - PAGI", members: currentShift1},
-          {name:"SHIFT 2 - MALAM", members: currentShift2}
+          { name: nameShiftPagi, members: membersShiftPagi, className: classShiftPagi },
+          { name: nameShiftMalam, members: membersShiftMalam, className: classShiftMalam }
         ];
         shifts.forEach(s=>{
           const div = document.createElement("div");
-          div.className = "shift";
+          div.className = s.className;
           div.innerHTML = `<h3>${s.name}</h3><ol>${s.members.map(m=>`<li>${m}</li>`).join("")}</ol>`;
           shiftContainer.appendChild(div);
         });
       }
 
+      // --- Rendering Jadwal Libur ---
       baseDays.forEach(day=>{
         const list = rotated[day] || [];
         const div = document.createElement("div");
         div.className = `day ${day}`;
-        div.innerHTML = `<h4>${day}</h4><p>${list.join("<br>")}</p>`;
+        div.innerHTML = `<h4>${day}</h4><p>${list.join("<br>") || 'Tidak Ada Libur'}</p>`;
         daysDiv.appendChild(div);
       });
     }
 
+    // --- Inisialisasi Event Listener ---
     const datePicker = document.getElementById("datePicker");
     const initDate = new Date();
     datePicker.valueAsDate = initDate;
