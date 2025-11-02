@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Minimalist Team & Holiday Scheduler</title>
-  <style>
+<style>
     /* Global & Typography */
     body {
       font-family: 'Inter', 'Segoe UI', sans-serif;
@@ -16,7 +16,7 @@
     }
 
     .container-wrapper {
-      max-width: 1100px; /* Lebar lebih besar untuk layout 2 kolom */
+      max-width: 1100px;
       margin: 40px auto;
       padding: 0 20px;
     }
@@ -58,6 +58,7 @@
       justify-content: center;
       gap: 15px;
       align-items: center;
+      flex-wrap: wrap; 
     }
 
     input[type="date"] {
@@ -94,14 +95,14 @@
       transform: translateY(-1px);
     }
 
-    /* --- LAYOUT BERDAMPINGAN UTAMA --- */
+    /* --- LAYOUT BERDAMPINGAN UTAMA (Default untuk desktop) --- */
     .main-content-flex {
         display: flex;
         justify-content: center;
         gap: 30px;
-        align-items: flex-start; /* Konten dimulai dari atas */
+        align-items: flex-start;
         margin-top: 20px;
-        flex-wrap: wrap; /* Pastikan responsif pada layar kecil */
+        flex-wrap: wrap; 
     }
     
     /* Container Shift */
@@ -109,14 +110,15 @@
         display: flex;
         gap: 25px;
         justify-content: center;
-        flex: 1; /* Ambil sisa ruang */
-        min-width: 580px; /* Minimum lebar untuk dua kartu shift */
+        flex: 1; 
+        /* min-width: 580px; DIHILANGKAN agar lebih fleksibel */
+        flex-wrap: wrap; /* Pastikan kartu shift membungkus jika perlu */
     }
 
     /* Rotation Info Table (Minimalis) */
     #rotation-info {
-        flex: 0 0 350px; /* Lebar tetap 350px untuk tabel rotasi */
-        order: 2; /* Taruh di samping (kanan) */
+        flex: 0 0 350px; 
+        order: 2; /* Pertahankan order 2 untuk desktop, agar di kanan */
     }
     .rotation-minimal-container {
         text-align: center;
@@ -167,7 +169,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       padding: 20px;
-      width: 280px;
+      width: 280px; 
       position: relative;
       border: 1px solid #e2e8f0;
       transition: transform 0.2s;
@@ -221,6 +223,88 @@
     .Jumat { background: #f5f3ff; border-color: #c4b5fd;}
     .Sabtu { background: #fafafa; border-color: #d1d5db;}
     .Minggu { background: #f0f9ff; border-color: #7dd3fc;}
+
+    /* ======================================= */
+    /* === MEDIA QUERIES UNTUK RESPONSIVITAS === */
+    /* ======================================= */
+
+    /* Layar Menengah (di bawah 992px) */
+    @media (max-width: 992px) {
+        .container-wrapper {
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* Tumpuk semua di main content */
+        .main-content-flex {
+            gap: 20px;
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        /* Ubah urutan: Table Rotasi (Order 1) selalu di atas kartu shift */
+        #rotation-info {
+            flex: 0 0 auto; 
+            width: 100%; 
+            max-width: 500px;
+            order: 1; /* Paling atas */
+        }
+
+        #shift-container {
+            flex: 0 0 auto; /* Ambil lebar yang dibutuhkan */
+            min-width: 0; /* Hilangkan batasan minimum lebar */
+            flex-direction: column; /* Tumpuk kartu shift */
+            width: 100%; 
+            gap: 15px; 
+            order: 2; /* Di bawah tabel rotasi */
+        }
+        
+        .shift {
+            width: 90%; /* Ambil 90% lebar container */
+            max-width: 400px; 
+            margin: 0 auto; 
+        }
+        
+        .days {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        h1 { font-size: 1.75rem; }
+        h2 { font-size: 1.3rem; }
+    }
+
+    /* Layar Kecil (di bawah 576px) */
+    @media (max-width: 576px) {
+        .container-wrapper {
+            margin: 10px auto;
+            padding: 0 10px;
+        }
+
+        h1 { font-size: 1.5rem; }
+        h2 { font-size: 1.2rem; }
+        p.subtitle { font-size: 0.9rem; }
+        
+        .controls {
+            flex-direction: column; 
+            gap: 10px;
+        }
+        
+        input[type="date"], .nav-link {
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        
+        .rotation-minimal-table th, .rotation-minimal-table td {
+            padding: 6px 3px; 
+            font-size: 0.85rem;
+        }
+        
+        .days {
+            grid-template-columns: repeat(2, 1fr); 
+        }
+    }
   </style>
 </head>
 <body>
@@ -243,9 +327,6 @@
 
     <div class="main-content-flex">
         
-        <div class="shift-cards-container" id="shift-container">
-            </div>
-
         <div id="rotation-info" class="rotation-minimal-container">
             <h3>🔄 Aturan Rotasi Tim Mingguan</h3>
             <table class="rotation-minimal-table">
@@ -274,7 +355,10 @@
                 </tbody>
             </table>
         </div>
+        
+        <div class="shift-cards-container" id="shift-container">
         </div>
+    </div>
     <hr>
 
     <h2>Pegawai Libur Mingguan</h2>
