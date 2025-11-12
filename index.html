@@ -366,153 +366,149 @@
   </div>
 
 <script>
-    // --- Data Karyawan dan Jadwal Dasar ---
-    const shift1 = ["Ozat", "Jaya", "Susma", "Nada", "Lilik", "Fitri", "Mila"];
-    const shift2 = ["Bram", "Riyan", "Faisal", "Nanda", "Upik", "Afifa", "Fadli"];
-    const allEmployees = [...shift1, ...shift2];
+  // --- Data Karyawan dan Jadwal Dasar ---
+  const shift1 = ["Ozat", "Jaya", "Nada", "Lilik", "Fitri"];
+  const shift2 = ["Bram", "Faisal", "Upik", "Afifa", "Fadli"];
+  const shift3 = ["Riyan (21:00 - closed)", "Nanda (21:00 - closed)", "Mila (17.00 - 23.00)"];
+  const allEmployees = [...shift1, ...shift2, ...shift3];
 
-    const baseSchedule = {
-      "Senin": ["Ozat", "Afifa"],
-      "Selasa": ["Nada", "Bram"],
-      "Rabu": ["Jaya", "Upik"],
-      "Kamis": ["Susma", "Faisal"],
-      "Jumat": ["Lilik", "Fadli"],
-      "Sabtu": ["Mila", "Riyan"],
-      "Minggu": ["Fitri", "Nanda"],
-    };
+  const baseSchedule = {
+    "Senin": ["Ozat", "Afifa"],
+    "Selasa": ["Nada", "Bram"],
+    "Rabu": ["Jaya", "Upik"],
+    "Kamis": ["Faisal"],
+    "Jumat": ["Lilik", "Fadli"],
+    "Sabtu": ["Mila", "Riyan"],
+    "Minggu": ["Fitri", "Nanda"],
+  };
 
-    // --- Konstanta Waktu ---
-    const baseDays = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
-    const daysOrder = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-    const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+  // --- Konstanta Waktu ---
+  const baseDays = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
+  const daysOrder = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-    // --- Fungsi Bantuan Waktu ---
-    function firstMondayOfYear(year) {
-      const d = new Date(year,0,1);
-      const day = d.getDay();
-      const offset = (8 - day) % 7;
-      d.setDate(d.getDate() + offset);
-      d.setHours(0,0,0,0);
-      return d;
+  // --- Fungsi Bantuan Waktu ---
+  function firstMondayOfYear(year) {
+    const d = new Date(year,0,1);
+    const day = d.getDay();
+    const offset = (8 - day) % 7;
+    d.setDate(d.getDate() + offset);
+    d.setHours(0,0,0,0);
+    return d;
+  }
+
+  function weeksSinceStart(refDate, date) {
+    const diff = Math.floor((date - refDate)/MS_PER_DAY);
+    return Math.floor(diff/7);
+  }
+
+  function daysSinceStart(refDate, date) {
+    return Math.floor((date - refDate)/MS_PER_DAY);
+  }
+
+  function dateFromInput(value) {
+    if(!value) return new Date();
+    return new Date(value+'T00:00:00');
+  }
+
+  // --- Fungsi Utama Render ---
+  function render(date){
+    const today = new Date(date.getFullYear(),date.getMonth(),date.getDate());
+    const startRef = firstMondayOfYear(today.getFullYear());
+    if(today < startRef){
+      const prevStart = firstMondayOfYear(today.getFullYear()-1);
+      if(today >= prevStart) startRef.setTime(prevStart.getTime());
     }
 
-    function weeksSinceStart(refDate, date) {
-      const diff = Math.floor((date - refDate)/MS_PER_DAY);
-      return Math.floor(diff/7);
-    }
+    const dayCount = daysSinceStart(startRef,today);
+    const weekCount = weeksSinceStart(startRef,today);
+    const dayInCycle = dayCount % 7;
 
-    function daysSinceStart(refDate, date) {
-      return Math.floor((date - refDate)/MS_PER_DAY);
-    }
+    // 🔁 ROTASI SHIFT 1 & 2 SETIAP MINGGU
+    const isShiftSwapped = weekCount % 2 === 1; // minggu ganjil = tukar shift
 
-    function dateFromInput(value) {
-      if(!value) return new Date();
-      return new Date(value+'T00:00:00');
-    }
-
-    // --- Fungsi Utama Render ---
-    function render(date){
-      const today = new Date(date.getFullYear(),date.getMonth(),date.getDate());
-      const startRef = firstMondayOfYear(today.getFullYear());
-      if(today < startRef){
-        const prevStart = firstMondayOfYear(today.getFullYear()-1);
-        if(today >= prevStart) startRef.setTime(prevStart.getTime());
-      }
-
-      const dayCount = daysSinceStart(startRef,today);
-      const weekCount = weeksSinceStart(startRef,today);
-      
-      const dayInCycle = dayCount % 7;
-      
-      // LOGIKA ROTASI TIM: Bertukar pada hari Kamis (dayInCycle >= 3)
-      const isShiftSwapped = dayInCycle >= 3; 
-      
-      const membersShift1 = shift1; 
-      const membersShift2 = shift2;
-      
-      const shiftBy = ((weekCount % 7)+7)%7;
-
-      const rotated = {};
-      baseDays.forEach((day, idx)=>{
-        const newIndex = (idx+shiftBy)%7;
-        const targetDay = baseDays[newIndex];
-        rotated[targetDay] = baseSchedule[day] ? [...baseSchedule[day]] : [];
-      });
-
-      // --- Tampilan Informasi Tanggal ---
-      const displayWeekNumber = weekCount + 1;
-      const formattedDate = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
-      document.getElementById("date-info").innerText =
-        `${formattedDate} (Minggu ke-${displayWeekNumber})`;
-
-      const shiftContainer = document.getElementById("shift-container");
-      const daysDiv = document.getElementById("days");
-      shiftContainer.innerHTML = "";
-      daysDiv.innerHTML = "";
-
-      const todayName = daysOrder[today.getDay()];
-      
-      // --- Penentuan Tim Berdasarkan Rotasi Mingguan ---
-      let membersShiftPagi;
-      let membersShiftMalam;
-      let nameShiftPagi;
-      let nameShiftMalam;
-      let classShiftPagi = "shift shift-pagi";
-      let classShiftMalam = "shift shift-malam";
-
-      if (isShiftSwapped) {
-        membersShiftPagi = membersShift2; 
-        membersShiftMalam = membersShift1; 
-        nameShiftPagi = "TIM 2 (PAGI)";
-        nameShiftMalam = "TIM 1 (MALAM)";
-      } else {
-        membersShiftPagi = membersShift1;
-        membersShiftMalam = membersShift2;
-        nameShiftPagi = "TIM 1 (PAGI)";
-        nameShiftMalam = "TIM 2 (MALAM)";
-      }
-
-      // --- Rendering Tim ---
-      if(todayName === "Jumat"){
-        const fridayOff = rotated["Jumat"] || [];
-        const workingPeople = allEmployees.filter(p=>!fridayOff.includes(p));
-        const div = document.createElement("div");
-        div.className = "shift shift-pagi"; 
-        div.innerHTML = `<h3>TIM KHUSUS JUMAT</h3><ol>${workingPeople.map(m=>`<li>${m}</li>`).join("")}</ol>`;
-        shiftContainer.appendChild(div);
-      } else {
-        const shifts = [
-          { name: nameShiftPagi, members: membersShiftPagi, className: classShiftPagi },
-          { name: nameShiftMalam, members: membersShiftMalam, className: classShiftMalam }
-        ];
-        shifts.forEach(s=>{
-          const div = document.createElement("div");
-          div.className = s.className;
-          div.innerHTML = `<h3>${s.name}</h3><ol>${s.members.map(m=>`<li>${m}</li>`).join("")}</ol>`;
-          shiftContainer.appendChild(div);
-        });
-      }
-
-      // --- Rendering Jadwal Libur ---
-      baseDays.forEach(day=>{
-        const list = rotated[day] || [];
-        const div = document.createElement("div");
-        div.className = `day ${day}`;
-        div.innerHTML = `<h4>${day}</h4><p>${list.join("<br>") || 'Tidak Ada Libur'}</p>`;
-        daysDiv.appendChild(div);
-      });
-    }
-
-    // --- Inisialisasi Event Listener ---
-    const datePicker = document.getElementById("datePicker");
-    const initDate = new Date();
-    datePicker.valueAsDate = initDate;
-    render(new Date(initDate.getFullYear(),initDate.getMonth(),initDate.getDate()));
-    datePicker.addEventListener("input", e=>{
-      const chosen = dateFromInput(e.target.value);
-      render(chosen);
+    // 🔄 ROTASI LIBUR: geser index hari berdasarkan minggu ke-
+    const shiftBy = weekCount % 7; 
+    const rotatedSchedule = {};
+    baseDays.forEach((day, idx) => {
+      const newIndex = (idx + shiftBy) % 7;
+      const newDay = baseDays[newIndex];
+      rotatedSchedule[newDay] = baseSchedule[day] ? [...baseSchedule[day]] : [];
     });
-  </script>
+
+    // --- Tampilan Informasi Tanggal ---
+    const displayWeekNumber = weekCount + 1;
+    const formattedDate = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+    document.getElementById("date-info").innerText =
+      `${formattedDate} (Minggu ke-${displayWeekNumber})`;
+
+    const shiftContainer = document.getElementById("shift-container");
+    const daysDiv = document.getElementById("days");
+    shiftContainer.innerHTML = "";
+    daysDiv.innerHTML = "";
+
+    const todayName = daysOrder[today.getDay()];
+
+    // --- Penentuan Tim Berdasarkan Rotasi Mingguan ---
+    let membersShiftPagi, membersShiftMalam;
+    let nameShiftPagi, nameShiftMalam;
+    let classShiftPagi = "shift shift-pagi";
+    let classShiftMalam = "shift shift-malam";
+
+    if (isShiftSwapped) {
+      membersShiftPagi = shift2; 
+      membersShiftMalam = shift1; 
+      nameShiftPagi = "TIM 2 (PAGI)";
+      nameShiftMalam = "TIM 1 (MALAM)";
+    } else {
+      membersShiftPagi = shift1;
+      membersShiftMalam = shift2;
+      nameShiftPagi = "TIM 1 (PAGI)";
+      nameShiftMalam = "TIM 2 (MALAM)";
+    }
+
+    // --- Rendering Tim ---
+    if(todayName === "Jumat"){
+      const workingPeople = allEmployees;
+      const div = document.createElement("div");
+      div.className = "shift shift-pagi"; 
+      div.innerHTML = `<h3>TIM KHUSUS JUMAT</h3><ol>${workingPeople.map(m=>`<li>${m}</li>`).join("")}</ol>`;
+      shiftContainer.appendChild(div);
+    } else {
+      const shifts = [
+        { name: nameShiftPagi, members: membersShiftPagi, className: classShiftPagi },
+        { name: nameShiftMalam, members: membersShiftMalam, className: classShiftMalam },
+        { name: "TIM 3 (KHUSUS)", members: shift3, className: "shift shift-malam" }
+      ];
+      shifts.forEach(s=>{
+        const div = document.createElement("div");
+        div.className = s.className;
+        div.innerHTML = `<h3>${s.name}</h3><ol>${s.members.map(m=>`<li>${m}</li>`).join("")}</ol>`;
+        shiftContainer.appendChild(div);
+      });
+    }
+
+    // --- Rendering Jadwal Libur (sudah ikut bergeser) ---
+    baseDays.forEach(day=>{
+      const list = rotatedSchedule[day] || [];
+      const div = document.createElement("div");
+      div.className = `day ${day}`;
+      div.innerHTML = `<h4>${day}</h4><p>${list.join("<br>") || 'Tidak Ada Libur'}</p>`;
+      daysDiv.appendChild(div);
+    });
+  }
+
+  // --- Inisialisasi Event Listener ---
+  const datePicker = document.getElementById("datePicker");
+  const initDate = new Date();
+  datePicker.valueAsDate = initDate;
+  render(new Date(initDate.getFullYear(),initDate.getMonth(),initDate.getDate()));
+  datePicker.addEventListener("input", e=>{
+    const chosen = dateFromInput(e.target.value);
+    render(chosen);
+  });
+</script>
+
 </body>
 </html>
