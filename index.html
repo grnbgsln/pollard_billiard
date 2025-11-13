@@ -339,15 +339,10 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Senin - Rabu (3 Hari)</td>
-                        <td class="tim-pagi">Pagi</td>
-                        <td class="tim-malam">Malam</td>
+                        <td>Change Shift akan berubah seminggu sekali</td>
+                      
                     </tr>
-                    <tr>
-                        <td>Kamis, Sabtu, Minggu (3 Hari)</td>
-                        <td class="tim-malam">Malam</td>
-                        <td class="tim-pagi">Pagi</td>
-                    </tr>
+                   
                     <tr>
                         <td>Jumat</td>
                         <td colspan="2" class="tim-khusus">✅ Semua Masuk (Kecuali Libur Harian)</td>
@@ -459,13 +454,13 @@
     if (isShiftSwapped) {
       membersShiftPagi = shift2; 
       membersShiftMalam = shift1; 
-      nameShiftPagi = "TIM 2 (PAGI)";
-      nameShiftMalam = "TIM 1 (MALAM)";
+      nameShiftPagi = "TIM 2";
+      nameShiftMalam = "TIM 1";
     } else {
       membersShiftPagi = shift1;
       membersShiftMalam = shift2;
-      nameShiftPagi = "TIM 1 (PAGI)";
-      nameShiftMalam = "TIM 2 (MALAM)";
+      nameShiftPagi = "TIM 1";
+      nameShiftMalam = "TIM 2";
     }
 
     // --- Rendering Tim ---
@@ -479,7 +474,7 @@
       const shifts = [
         { name: nameShiftPagi, members: membersShiftPagi, className: classShiftPagi },
         { name: nameShiftMalam, members: membersShiftMalam, className: classShiftMalam },
-        { name: "TIM 3 (KHUSUS)", members: shift3, className: "shift shift-malam" }
+        { name: "TIM 3", members: shift3, className: "shift shift-malam" }
       ];
       shifts.forEach(s=>{
         const div = document.createElement("div");
