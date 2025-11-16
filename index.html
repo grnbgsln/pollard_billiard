@@ -111,14 +111,13 @@
         gap: 25px;
         justify-content: center;
         flex: 1; 
-        /* min-width: 580px; DIHILANGKAN agar lebih fleksibel */
-        flex-wrap: wrap; /* Pastikan kartu shift membungkus jika perlu */
+        flex-wrap: wrap; 
     }
 
     /* Rotation Info Table (Minimalis) */
     #rotation-info {
         flex: 0 0 350px; 
-        order: 2; /* Pertahankan order 2 untuk desktop, agar di kanan */
+        order: 2; 
     }
     .rotation-minimal-container {
         text-align: center;
@@ -247,20 +246,20 @@
             flex: 0 0 auto; 
             width: 100%; 
             max-width: 500px;
-            order: 1; /* Paling atas */
+            order: 1; 
         }
 
         #shift-container {
-            flex: 0 0 auto; /* Ambil lebar yang dibutuhkan */
-            min-width: 0; /* Hilangkan batasan minimum lebar */
-            flex-direction: column; /* Tumpuk kartu shift */
+            flex: 0 0 auto; 
+            min-width: 0; 
+            flex-direction: column; 
             width: 100%; 
             gap: 15px; 
-            order: 2; /* Di bawah tabel rotasi */
+            order: 2; 
         }
         
         .shift {
-            width: 90%; /* Ambil 90% lebar container */
+            width: 90%; 
             max-width: 400px; 
             margin: 0 auto; 
         }
@@ -309,10 +308,10 @@
 </head>
 <body>
   <div class="container-wrapper">
-    <h1>🗓️ Jadwal Tim Karyawan</h1>
+    <h1>🗓️ Jadwal Kerja Pollard</h1>
     <p class="subtitle">
-      Rotasi tim 7 hari dan jadwal libur.<br>
-      <span style="color: red;">Ini berlaku di tanggal 3 November 2025 dan seterusnya. </span>
+      Rotasi Rolling Shift Kerja 1 Minggu dan Libur kerja.<br>
+    
     
     </p>
 
@@ -333,16 +332,17 @@
                 <thead>
                     <tr>
                         <th>Periode</th>
-                        <th>Tim 1</th>
-                        <th>Tim 2</th>
+                        <th colspan="2">Keterangan</th>
+                      
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Change Shift akan berubah seminggu sekali</td>
-                      
+                        <td>Senin, Selasa, Rabu, Kamis, Sabtu, Minggu</td>
+                        <td colspan="2">Rolling Shift Kerja Akan berubah seminggu sekali</td>
+  
                     </tr>
-                   
+                  
                     <tr>
                         <td>Jumat</td>
                         <td colspan="2" class="tim-khusus">✅ Semua Masuk (Kecuali Libur Harian)</td>
@@ -356,16 +356,20 @@
     </div>
     <hr>
 
-    <h2>Pegawai Libur Mingguan</h2>
+    <h2>Karyawan Libur Mingguan</h2>
     <div class="days" id="days"></div>
   </div>
 
 <script>
-  // --- Data Karyawan dan Jadwal Dasar ---
-  const shift1 = ["Ozat", "Jaya", "Nada", "Lilik", "Fitri"];
-  const shift2 = ["Bram", "Faisal", "Upik", "Afifa", "Fadli"];
-  const shift3 = ["Riyan (21:00 - closed)", "Nanda (21:00 - closed)", "Mila (17.00 - 23.00)"];
-  const allEmployees = [...shift1, ...shift2, ...shift3];
+  // --- Data Karyawan dan Jadwal Dasar (Data sebelumnya) ---
+  const shift1 = ["Ozat", "Jaya", "Nada", "Lilik"]; 
+  const shift2 = ["Bram", "Faisal", "Upik", "Afifa", "Fadli"]; 
+  
+  const shiftPagiTetap = ["Fitri"]; 
+  const shiftMalamTetap = ["Mila"]; 
+
+  const shift3 = ["Riyan (21:00 - closed)", "Nanda (21:00 - closed)",];
+  const allEmployees = [...shift1, ...shift2, ...shift3, ...shiftPagiTetap, ...shiftMalamTetap];
 
   const baseSchedule = {
     "Senin": ["Ozat", "Afifa"],
@@ -373,8 +377,8 @@
     "Rabu": ["Jaya", "Upik"],
     "Kamis": ["Faisal"],
     "Jumat": ["Lilik", "Fadli"],
-    "Sabtu": ["Mila", "Riyan"],
-    "Minggu": ["Fitri", "Nanda"],
+    "Sabtu": ["Mila", "Riyan"], 
+    "Minggu": ["Fitri", "Nanda"], 
   };
 
   // --- Konstanta Waktu ---
@@ -419,6 +423,9 @@
     const dayCount = daysSinceStart(startRef,today);
     const weekCount = weeksSinceStart(startRef,today);
     const dayInCycle = dayCount % 7;
+    
+    // Ambil Nama Hari
+    const todayName = daysOrder[today.getDay()];
 
     // 🔁 ROTASI SHIFT 1 & 2 SETIAP MINGGU
     const isShiftSwapped = weekCount % 2 === 1; // minggu ganjil = tukar shift
@@ -432,36 +439,48 @@
       rotatedSchedule[newDay] = baseSchedule[day] ? [...baseSchedule[day]] : [];
     });
 
-    // --- Tampilan Informasi Tanggal ---
-    const displayWeekNumber = weekCount + 1;
-    const formattedDate = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
-    document.getElementById("date-info").innerText =
-      `${formattedDate} (Minggu ke-${displayWeekNumber})`;
+    // --- Tampilan Informasi Tanggal (DIUBAH) ---
+    // Hapus "Minggu ke-" dan tambahkan nama hari
+    const formattedDate = `${todayName}, ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+    
+    document.getElementById("date-info").innerText = formattedDate;
 
     const shiftContainer = document.getElementById("shift-container");
     const daysDiv = document.getElementById("days");
     shiftContainer.innerHTML = "";
     daysDiv.innerHTML = "";
 
-    const todayName = daysOrder[today.getDay()];
-
-    // --- Penentuan Tim Berdasarkan Rotasi Mingguan ---
-    let membersShiftPagi, membersShiftMalam;
+    // --- Penentuan Tim Berdasarkan Rotasi Mingguan (LOGIKA KUOTA 5:6) ---
+    let membersShiftPagiRotasi, membersShiftMalamRotasi;
     let nameShiftPagi, nameShiftMalam;
     let classShiftPagi = "shift shift-pagi";
     let classShiftMalam = "shift shift-malam";
 
     if (isShiftSwapped) {
-      membersShiftPagi = shift2; 
-      membersShiftMalam = shift1; 
-      nameShiftPagi = "TIM 2";
-      nameShiftMalam = "TIM 1";
+      membersShiftPagiRotasi = [...shift2]; 
+      membersShiftMalamRotasi = [...shift1]; 
+      nameShiftPagi = "TIM (PAGI) ";
+      nameShiftMalam = "TIM (MALAM) ";
     } else {
-      membersShiftPagi = shift1;
-      membersShiftMalam = shift2;
-      nameShiftPagi = "TIM 1";
-      nameShiftMalam = "TIM 2";
+      membersShiftPagiRotasi = [...shift1]; 
+      membersShiftMalamRotasi = [...shift2]; 
+      nameShiftPagi = "TIM (PAGI) ";
+      nameShiftMalam = "TIM  (MALAM) ";
     }
+    
+    // LOGIKA FLOATER (FADLI)
+    if (membersShiftPagiRotasi.length === 5) {
+        const floaterName = "Fadli";
+        const floaterIndex = membersShiftPagiRotasi.indexOf(floaterName);
+        if (floaterIndex > -1) {
+            membersShiftPagiRotasi.splice(floaterIndex, 1); 
+        }
+        membersShiftMalamRotasi.push(floaterName); 
+    }
+
+    // Gabungkan Tim Rotasi dengan Karyawan Tetap
+    const membersShiftPagi = [...membersShiftPagiRotasi, ...shiftPagiTetap].sort(); 
+    const membersShiftMalam = [...membersShiftMalamRotasi, ...shiftMalamTetap].sort(); 
 
     // --- Rendering Tim ---
     if(todayName === "Jumat"){
@@ -474,7 +493,7 @@
       const shifts = [
         { name: nameShiftPagi, members: membersShiftPagi, className: classShiftPagi },
         { name: nameShiftMalam, members: membersShiftMalam, className: classShiftMalam },
-        { name: "TIM 3", members: shift3, className: "shift shift-malam" }
+        { name: "TIM 3 (KHUSUS)", members: shift3, className: "shift shift-malam" }
       ];
       shifts.forEach(s=>{
         const div = document.createElement("div");
