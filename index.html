@@ -404,16 +404,16 @@
             </thead>
             <tbody>
               <tr>
-                <td>Senin, Selasa, Rabu, Kamis, Sabtu, Minggu</td>
+                <td>Senin s/d Minggu</td>
                 <td colspan="2">
-                  Rolling Shift Kerja Akan berubah seminggu sekali
+                  Rolling Shift Kerja akan berubah setiap minggu.
                 </td>
               </tr>
 
               <tr>
                 <td>Jumat</td>
                 <td colspan="2" class="tim-khusus">
-                  ✅ Semua Masuk (Kecuali Libur Harian)
+                   Masuk Normal Jam 11:00 - 18:00 shift pagi, dan 17:00 - 24:00 shift malam.
                 </td>
               </tr>
             </tbody>
@@ -453,12 +453,12 @@
 
       const baseSchedule = {
         Senin: ["Ozat", "Afifa"],
-        Selasa: ["Nada", "Bram"],
+        Selasa: ["Bram"],
         Rabu: ["Jaya", "Upik"],
         Kamis: ["Faisal"],
         Jumat: ["Lilik", "Fadli"],
         Sabtu: ["Mila", "Riyan"],
-        Minggu: ["Fitri"],
+        Minggu: ["Fitri","Nada"],
       };
 
       // --- Konstanta Waktu ---
@@ -567,6 +567,8 @@
         daysDiv.innerHTML = "";
 
         // --- Penentuan Tim Berdasarkan Rotasi Mingguan (LOGIKA KUOTA 3:5 ROTASI) ---
+
+        // Menentukan anggota rotasi berdasarkan minggu ganjil/genap
         let membersShiftPagiRotasi = isShiftSwapped ? [...shift2] : [...shift1];
         let membersShiftMalamRotasi = isShiftSwapped
           ? [...shift1]
@@ -577,7 +579,7 @@
         const TARGET_MALAM_ROTASI = 5;
 
         // Logika penyesuaian untuk memastikan kuota 3:5 dipenuhi
-
+        
         // 1. Jika Pagi kelebihan (hanya bisa terjadi jika shift2 di Pagi)
         while (membersShiftPagiRotasi.length > TARGET_PAGI_ROTASI) {
           // Ambil 2 orang dari Pagi (shift2) pindahkan ke Malam (shift1)
@@ -602,45 +604,51 @@
           ...shiftMalamTetap,
         ].sort();
 
-        // --- Rendering Tim ---
-        if (todayName === "Jumat") {
-          const workingPeople = allEmployees;
-          const div = document.createElement("div");
-          div.className = "shift shift-pagi";
-          div.innerHTML = `<h3>TIM KHUSUS JUMAT — Semua Masuk</h3><ol>${workingPeople
-            .map((m) => `<li>${m}</li>`)
-            .join("")}</ol>`;
-          shiftContainer.appendChild(div);
-        } else {
-          const shifts = [
-            // Pagi: Total 4
-            {
-              name: `TIM (PAGI) — Total ${membersShiftPagi.length}`,
-              members: membersShiftPagi,
-              className: "shift shift-pagi",
-            },
-            // Malam: Total 6
-            {
-              name: `TIM (MALAM) — Total ${membersShiftMalam.length}`,
-              members: membersShiftMalam,
-              className: "shift shift-malam",
-            },
-            // Khusus
-            {
-              name: "TIM 3 (KHUSUS)",
-              members: shift3,
-              className: "shift shift-malam",
-            },
-          ];
-          shifts.forEach((s) => {
+        // --- Rendering Tim (APPLY UNTUK SEMUA HARI TERMASUK JUMAT) ---
+        const shifts = [
+          // Pagi: Total 4
+          {
+            name: `TIM (PAGI) — Total ${membersShiftPagi.length}`,
+            members: membersShiftPagi,
+            className: "shift shift-pagi",
+          },
+          // Malam: Total 6
+          {
+            name: `TIM (MALAM) — Total ${membersShiftMalam.length}`,
+            members: membersShiftMalam,
+            className: "shift shift-malam",
+          },
+          // Khusus
+          {
+            name: "TIM 3 (KHUSUS)",
+            members: shift3,
+            className: "shift shift-malam",
+          },
+        ];
+        
+        // Filter karyawan yang sedang libur hari ini
+        const todayOff = rotatedSchedule[todayName] || [];
+        
+        shifts.forEach((s) => {
+            // Hilangkan anggota shift yang sedang libur harian
+            const workingMembers = s.members.filter(member => !todayOff.includes(member.split(' ')[0])); // split(' ')[0] untuk handle nama dengan jam kerja di shift3
+            
             const div = document.createElement("div");
             div.className = s.className;
-            div.innerHTML = `<h3>${s.name}</h3><ol>${s.members
+            div.innerHTML = `<h3>${s.name} — ${todayName}</h3><ol>${workingMembers
               .map((m) => `<li>${m}</li>`)
               .join("")}</ol>`;
             shiftContainer.appendChild(div);
-          });
+        });
+        
+        // Catatan: Logika asli yang membedakan Jumat sudah Dihapus.
+        /*
+        if (todayName === "Jumat") {
+          // Logika khusus Jumat lama dihapus
+        } else {
+          // Logika shift biasa diterapkan
         }
+        */
 
         // --- Rendering Jadwal Libur (sudah ikut bergeser) ---
         baseDays.forEach((day) => {
